@@ -9,7 +9,10 @@ export const MOCK_PROFILES: Profile[] = [
     avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
     skills_offered: ['3D Modeling', 'Blender', 'Motion Graphics', 'Octane Render'],
     skills_wanted: ['Watercolor Painting', 'UI/UX Design', 'Character Design'],
+    role: 'both',
+    skills: ['3D Modeling', 'Blender', 'Motion Graphics', 'Octane Render'],
     created_at: '2026-01-15T10:00:00Z',
+    updated_at: '2026-01-15T10:00:00Z',
   },
   {
     id: '22222222-2222-2222-2222-222222222222',
@@ -19,7 +22,10 @@ export const MOCK_PROFILES: Profile[] = [
     avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
     skills_offered: ['Oil Painting', 'Watercolor Painting', 'Color Theory', 'Traditional Sketching'],
     skills_wanted: ['3D Modeling', 'Blender', 'Photoshop Painting'],
+    role: 'both',
+    skills: ['Oil Painting', 'Watercolor Painting', 'Color Theory', 'Traditional Sketching'],
     created_at: '2026-01-18T14:30:00Z',
+    updated_at: '2026-01-18T14:30:00Z',
   },
   {
     id: '33333333-3333-3333-3333-333333333333',
@@ -29,7 +35,10 @@ export const MOCK_PROFILES: Profile[] = [
     avatar_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
     skills_offered: ['UI/UX Design', 'Figma', 'Vector Illustration', 'Design Systems'],
     skills_wanted: ['Blender', 'Ceramics', 'Screen Printing'],
+    role: 'both',
+    skills: ['UI/UX Design', 'Figma', 'Vector Illustration', 'Design Systems'],
     created_at: '2026-02-01T09:15:00Z',
+    updated_at: '2026-02-01T09:15:00Z',
   },
   {
     id: '44444444-4444-4444-4444-444444444444',
@@ -39,7 +48,10 @@ export const MOCK_PROFILES: Profile[] = [
     avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80',
     skills_offered: ['Sound Design', 'Ableton Live', 'Foley Recording', 'Game Audio'],
     skills_wanted: ['Pixel Art', '2D Animation', 'Motion Graphics'],
+    role: 'both',
+    skills: ['Sound Design', 'Ableton Live', 'Foley Recording', 'Game Audio'],
     created_at: '2026-02-10T16:20:00Z',
+    updated_at: '2026-02-10T16:20:00Z',
   },
 ];
 
@@ -52,7 +64,7 @@ export const MOCK_POSTS: PortfolioPost[] = [
     image_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80',
     tags: ['3D Modeling', 'Blender', 'Cyberpunk', 'Sci-Fi'],
     created_at: '2026-02-12T11:00:00Z',
-    profiles: MOCK_PROFILES[0],
+    user: MOCK_PROFILES[0],
   },
   {
     id: 'p2',
@@ -62,7 +74,7 @@ export const MOCK_POSTS: PortfolioPost[] = [
     image_url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&q=80',
     tags: ['Oil Painting', 'Impressionism', 'Traditional Art'],
     created_at: '2026-02-14T08:45:00Z',
-    profiles: MOCK_PROFILES[1],
+    user: MOCK_PROFILES[1],
   },
   {
     id: 'p3',
@@ -72,7 +84,7 @@ export const MOCK_POSTS: PortfolioPost[] = [
     image_url: 'https://images.unsplash.com/photo-1616469829941-c7200edec809?w=800&q=80',
     tags: ['UI/UX Design', 'Figma', 'Mobile App'],
     created_at: '2026-02-15T14:10:00Z',
-    profiles: MOCK_PROFILES[2],
+    user: MOCK_PROFILES[2],
   },
   {
     id: 'p4',
@@ -82,7 +94,7 @@ export const MOCK_POSTS: PortfolioPost[] = [
     image_url: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=800&q=80',
     tags: ['3D Modeling', 'Abstract', 'Octane'],
     created_at: '2026-02-18T19:30:00Z',
-    profiles: MOCK_PROFILES[0],
+    user: MOCK_PROFILES[0],
   },
   {
     id: 'p5',
@@ -92,7 +104,7 @@ export const MOCK_POSTS: PortfolioPost[] = [
     image_url: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&q=80',
     tags: ['Sound Design', 'Ableton', 'Audio UI'],
     created_at: '2026-02-20T10:00:00Z',
-    profiles: MOCK_PROFILES[3],
+    user: MOCK_PROFILES[3],
   },
   {
     id: 'p6',
@@ -102,6 +114,6 @@ export const MOCK_POSTS: PortfolioPost[] = [
     image_url: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=800&q=80',
     tags: ['Vector Illustration', 'Game Art', 'Figma'],
     created_at: '2026-02-22T13:15:00Z',
-    profiles: MOCK_PROFILES[2],
+    user: MOCK_PROFILES[2],
   },
 ];

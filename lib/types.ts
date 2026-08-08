@@ -45,8 +45,10 @@ export interface Order {
 
 export interface Message {
   id: string;
-  order_id: string;
+  order_id?: string;
+  swap_id?: string;
   sender_id: string;
+  receiver_id?: string;
   content: string;
   file_url?: string;
   created_at: string;
@@ -62,4 +64,28 @@ export interface Review {
   feedback?: string;
   created_at: string;
   reviewer?: Profile;
+}
+
+export interface SkillSwapRequest {
+  id: string;
+  sender_id: string;
+  receiver_id: string;
+  offered_skill: string;
+  requested_skill: string;
+  message?: string;
+  status: 'pending' | 'accepted' | 'declined';
+  created_at: string;
+  sender_profile?: Profile;
+  receiver_profile?: Profile;
+}
+
+export interface PortfolioPost {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string;
+  image_url: string;
+  tags?: string[];
+  created_at: string;
+  user?: Profile;
 }

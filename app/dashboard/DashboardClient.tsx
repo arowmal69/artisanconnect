@@ -49,7 +49,7 @@ export default function DashboardClient({ profile, activeOrders, recommendedServ
           {/* Profile Card */}
           <div className="rounded-2xl bg-white p-6 border border-slate-200 flex flex-col items-center text-center shadow-sm">
             <img
-              src={profile.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${profile.email}`}
+              src={profile.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${profile.username}`}
               alt={profile.full_name || profile.username}
               className="h-24 w-24 rounded-full object-cover mb-4 ring-2 ring-indigo-50"
             />
