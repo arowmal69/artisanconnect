@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
-import { Star, Clock, Check, ChevronRight, Shield, RefreshCw } from 'lucide-react';
+import { Star, Clock, Check, ChevronRight, Shield, RefreshCw, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -11,50 +11,50 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 
 export default function ServiceDetailsPage({ params }: { params: { id: string } }) {
-  // Mock data for the service
+  // Mock data for a creative service
   const service = {
-    title: 'I will build a full-stack Next.js web application',
-    description: 'I will develop a modern, fast, and scalable web application using Next.js 14, Tailwind CSS, and Supabase. With over 5 years of experience in full-stack development, I ensure clean code, responsive design, and robust backend architecture.',
-    category: 'Web Development',
-    tags: ['Next.js', 'React', 'TypeScript', 'Supabase'],
+    title: 'I will create a custom digital portrait illustration',
+    description: 'I will hand-craft a stunning, high-resolution digital portrait of you, your loved ones, or your pets — in my signature vibrant illustrative style. With over 6 years of experience in digital illustration using Procreate and Photoshop, every piece is unique, full of character, and delivered as a print-ready file.',
+    category: 'Illustration & Art',
+    tags: ['Portraits', 'Digital Art', 'Procreate', 'Illustration'],
     images: [
-      'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80',
-      'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80',
+      'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80',
+      'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80',
     ],
     seller: {
-      name: 'Alex Johnson',
+      name: 'Maya Rivera',
       level: 'Top Rated',
-      avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
-      bio: 'Full-stack developer specializing in React ecosystem and serverless backends.',
-      joined: '2022',
-      reviews: 124,
+      avatar: 'https://i.pravatar.cc/150?u=artist1',
+      bio: 'Digital illustrator specializing in vibrant portraits, character design, and editorial art. Based in Los Angeles.',
+      joined: '2021',
+      reviews: 218,
       rating: 4.9,
       country: 'United States'
     },
     packages: {
       basic: {
-        name: 'Basic SPA',
-        price: 450,
-        description: 'A simple single-page application with up to 3 pages. Responsive design included.',
-        delivery: 7,
-        revisions: 2,
-        features: ['3 Pages', 'Responsive Design', 'Source Code']
+        name: 'Simple Sketch',
+        price: 45,
+        description: 'A clean black-and-white digital sketch of one subject. Great for profile pictures.',
+        delivery: 3,
+        revisions: 1,
+        features: ['1 Subject', 'B&W Line Art', 'High-Res PNG', 'Commercial Use']
       },
       standard: {
-        name: 'Full-Stack App',
-        price: 900,
-        description: 'Complete web app with user authentication, database integration, and up to 5 pages.',
-        delivery: 14,
+        name: 'Full Color Portrait',
+        price: 90,
+        description: 'Fully colored digital portrait of one subject with detailed background and shading.',
+        delivery: 6,
         revisions: 3,
-        features: ['5 Pages', 'Authentication', 'Database Setup', 'Responsive Design', 'Source Code']
+        features: ['1 Subject', 'Full Color', 'Background Included', 'High-Res PNG + PSD', 'Commercial Use']
       },
       premium: {
-        name: 'Enterprise Solution',
-        price: 1500,
-        description: 'Complex application with advanced features, admin panel, payment integration, and prioritized support.',
-        delivery: 21,
+        name: 'Deluxe Commission',
+        price: 180,
+        description: 'A fully illustrated scene with up to 3 subjects, rich background, and frame-ready finish.',
+        delivery: 12,
         revisions: 'Unlimited',
-        features: ['10+ Pages', 'Admin Dashboard', 'Payment Gateway', 'Priority Support', 'Source Code']
+        features: ['Up to 3 Subjects', 'Full Color Scene', 'Detailed Background', 'Print-Ready File', 'Rush Option Available', 'Commercial Use']
       }
     }
   };
@@ -66,9 +66,9 @@ export default function ServiceDetailsPage({ params }: { params: { id: string } 
       <div className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center text-sm text-slate-500">
-            <Link href="/" className="hover:text-indigo-600 transition-colors">Home</Link>
+            <Link href="/" className="hover:text-violet-600 transition-colors">Home</Link>
             <ChevronRight className="h-4 w-4 mx-2" />
-            <Link href="#" className="hover:text-indigo-600 transition-colors">{service.category}</Link>
+            <Link href="/explore" className="hover:text-violet-600 transition-colors">{service.category}</Link>
             <ChevronRight className="h-4 w-4 mx-2" />
             <span className="text-slate-900 font-medium truncate">Service Details</span>
           </div>
@@ -124,9 +124,9 @@ export default function ServiceDetailsPage({ params }: { params: { id: string } 
 
             {/* Seller Bio */}
             <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">About The Seller</h2>
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">About The Freelancer</h2>
               <div className="flex flex-col sm:flex-row gap-6 items-start">
-                <Avatar className="h-24 w-24 border-2 border-indigo-100">
+                <Avatar className="h-24 w-24 border-2 border-violet-100">
                   <AvatarImage src={service.seller.avatar} />
                   <AvatarFallback>{service.seller.name[0]}</AvatarFallback>
                 </Avatar>
@@ -150,9 +150,9 @@ export default function ServiceDetailsPage({ params }: { params: { id: string } 
               <Card className="border-slate-200 shadow-xl overflow-hidden">
                 <Tabs defaultValue="standard" className="w-full">
                   <TabsList className="grid w-full grid-cols-3 rounded-none h-14 bg-slate-50 p-0">
-                    <TabsTrigger value="basic" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 data-[state=active]:text-indigo-600 data-[state=active]:shadow-none">Basic</TabsTrigger>
-                    <TabsTrigger value="standard" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 data-[state=active]:text-indigo-600 data-[state=active]:shadow-none">Standard</TabsTrigger>
-                    <TabsTrigger value="premium" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 data-[state=active]:text-indigo-600 data-[state=active]:shadow-none">Premium</TabsTrigger>
+                    <TabsTrigger value="basic" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 data-[state=active]:shadow-none">Basic</TabsTrigger>
+                    <TabsTrigger value="standard" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 data-[state=active]:shadow-none">Standard</TabsTrigger>
+                    <TabsTrigger value="premium" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 data-[state=active]:shadow-none">Premium</TabsTrigger>
                   </TabsList>
                   
                   {['basic', 'standard', 'premium'].map((tier) => {
@@ -182,8 +182,8 @@ export default function ServiceDetailsPage({ params }: { params: { id: string } 
                         </CardContent>
                         <CardFooter>
                           <Link href={`/orders/new`} className="w-full">
-                            <Button className="w-full h-12 text-base font-semibold bg-indigo-600 hover:bg-indigo-700 transition-colors">
-                              Continue (${pkg.price})
+                            <Button className="w-full h-12 text-base font-semibold bg-violet-600 hover:bg-violet-700 transition-colors">
+                              Hire Now (${pkg.price})
                             </Button>
                           </Link>
                         </CardFooter>
@@ -194,7 +194,7 @@ export default function ServiceDetailsPage({ params }: { params: { id: string } 
               </Card>
 
               <div className="bg-slate-100 rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-slate-600">
-                <Shield className="h-5 w-5 text-indigo-500" />
+                <Shield className="h-5 w-5 text-violet-500" />
                 <span>Payment is held securely in escrow</span>
               </div>
             </div>

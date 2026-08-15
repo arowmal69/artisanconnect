@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, LogOut, ChevronDown, User, Settings } from 'lucide-react';
+import { Menu, X, LogOut } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { logout } from '@/app/(auth)/actions';
 import { User as SupabaseUser } from '@supabase/supabase-js';
@@ -31,24 +31,24 @@ export default function Navbar() {
         
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="flex h-8 w-8 items-center justify-center bg-indigo-600 text-white rounded-lg font-bold text-xs tracking-tighter shadow-sm group-hover:bg-indigo-700 transition-colors">
-            SE
+          <div className="flex h-8 w-8 items-center justify-center bg-violet-600 text-white rounded-lg font-bold text-xs tracking-tighter shadow-sm group-hover:bg-violet-700 transition-colors">
+            AC
           </div>
           <span className="text-lg font-bold text-slate-900 tracking-tight">
-            SkillExchange
+            ArtisanConnect
           </span>
         </Link>
 
         {/* Center Nav Links */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-          <Link href="/" className="hover:text-indigo-600 transition-colors">
-            Marketplace
+          <Link href="/" className="hover:text-violet-600 transition-colors">
+            Home
           </Link>
-          <Link href="/explore" className="hover:text-indigo-600 transition-colors">
-            Explore Services
+          <Link href="/explore" className="hover:text-violet-600 transition-colors">
+            Find Freelancers
           </Link>
           {user && (
-            <Link href="/dashboard" className="hover:text-indigo-600 transition-colors">
+            <Link href="/dashboard" className="hover:text-violet-600 transition-colors">
               My Orders
             </Link>
           )}
@@ -61,12 +61,12 @@ export default function Navbar() {
           ) : user ? (
             <div className="flex items-center gap-4">
               <Link href="/dashboard">
-                <Button variant="ghost" className="text-slate-600 hover:text-indigo-600">
+                <Button variant="ghost" className="text-slate-600 hover:text-violet-600">
                   Dashboard
                 </Button>
               </Link>
               <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
-                <Avatar className="h-8 w-8 cursor-pointer ring-2 ring-transparent hover:ring-indigo-100 transition-all">
+                <Avatar className="h-8 w-8 cursor-pointer ring-2 ring-transparent hover:ring-violet-100 transition-all">
                   <AvatarImage src={user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${user.email}`} />
                   <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
@@ -80,12 +80,12 @@ export default function Navbar() {
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/login">
-                <Button variant="ghost" className="text-slate-600 hover:text-indigo-600">
+                <Button variant="ghost" className="text-slate-600 hover:text-violet-600">
                   Log In
                 </Button>
               </Link>
               <Link href="/signup">
-                <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                <Button className="bg-violet-600 hover:bg-violet-700 text-white">
                   Join Free
                 </Button>
               </Link>
@@ -112,16 +112,16 @@ export default function Navbar() {
           <Link
             href="/"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 rounded-md"
+            className="block px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-violet-600 rounded-md"
           >
-            Marketplace
+            Home
           </Link>
           <Link
             href="/explore"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 rounded-md"
+            className="block px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-violet-600 rounded-md"
           >
-            Explore Services
+            Find Freelancers
           </Link>
           
           <div className="pt-4 mt-2 border-t border-slate-100">
@@ -130,7 +130,7 @@ export default function Navbar() {
                  <Link
                     href="/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 rounded-md"
+                    className="block px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-violet-600 rounded-md"
                   >
                     My Orders
                   </Link>
@@ -151,7 +151,7 @@ export default function Navbar() {
                    <Button variant="outline" className="w-full">Log In</Button>
                  </Link>
                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="w-full">
-                   <Button className="w-full bg-indigo-600 hover:bg-indigo-700">Join Free</Button>
+                   <Button className="w-full bg-violet-600 hover:bg-violet-700">Join Free</Button>
                  </Link>
                </div>
             )}

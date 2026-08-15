@@ -1,18 +1,18 @@
 import { createClient } from '@/lib/supabase/server';
 import ExploreClient from './ExploreClient';
+import { MOCK_PROFILES } from '@/lib/mock-data';
 
 export default async function ExplorePage() {
   const supabase = await createClient();
 
-  // Fetch all profiles
-  const { data: profiles, error } = await supabase
+  // Fetch all profiles from Supabase if available
+  const { data: profiles } = await supabase
     .from('profiles')
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching profiles:', error);
-  }
+  // Use database profiles if present, otherwise default to rich mock creative freelancers
+  const displayedProfiles = profiles && profiles.length > 0 ? profiles : MOCK_PROFILES;
 
-  return <ExploreClient initialProfiles={profiles || []} />;
+  return <ExploreClient initialProfiles={displayedProfiles} />;
 }

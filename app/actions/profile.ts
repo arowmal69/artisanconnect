@@ -13,19 +13,18 @@ export async function updateProfile(formData: FormData) {
 
   const fullName = formData.get('full_name') as string
   const bio = formData.get('bio') as string
-  const skillsOfferedStr = formData.get('skills_offered') as string
-  const skillsWantedStr = formData.get('skills_wanted') as string
+  const portfolioUrl = formData.get('portfolio_url') as string
+  const skillsStr = (formData.get('skills') as string) || (formData.get('specialties') as string)
 
-  const skills_offered = skillsOfferedStr ? skillsOfferedStr.split(',').map(s => s.trim()).filter(Boolean) : []
-  const skills_wanted = skillsWantedStr ? skillsWantedStr.split(',').map(s => s.trim()).filter(Boolean) : []
+  const skills = skillsStr ? skillsStr.split(',').map(s => s.trim()).filter(Boolean) : []
 
   const { error } = await supabase
     .from('profiles')
     .update({
       full_name: fullName,
       bio,
-      skills_offered,
-      skills_wanted,
+      portfolio_url: portfolioUrl,
+      skills,
       updated_at: new Date().toISOString()
     })
     .eq('id', user.id)

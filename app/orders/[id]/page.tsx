@@ -2,44 +2,44 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, Paperclip, Send, Clock, CheckCircle2, FileText, AlertCircle } from 'lucide-react';
+import { ChevronLeft, Paperclip, Send, Clock, CheckCircle2, FileText, AlertCircle, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 
 export default function OrderWorkspacePage({ params }: { params: { id: string } }) {
   const [message, setMessage] = useState('');
   
-  // Mock Data
+  // Creative Commission Mock Data
   const order = {
-    id: params.id,
+    id: params.id || 'ORD-9821',
     status: 'active', // pending, active, delivered, completed
-    serviceTitle: 'I will build a full-stack Next.js web application',
-    price: 900,
-    deliveryDate: '2026-08-10',
+    serviceTitle: 'Custom Digital Portrait Illustration & Character Commission',
+    price: 90,
+    deliveryDate: '2026-08-22',
     seller: {
-      name: 'Alex Johnson',
-      avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
-      role: 'Seller'
+      name: 'Maya Rivera',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&q=80',
+      role: 'Freelancer (Illustrator)'
     },
     buyer: {
       name: 'You',
-      avatar: 'https://i.pravatar.cc/150?u=your_avatar',
-      role: 'Buyer'
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&q=80',
+      role: 'Client'
     },
-    requirements: 'Need a dashboard with authentication, database integration, and analytics charts. Must use Tailwind CSS.',
+    requirements: 'A digital portrait of our indie music band cover with vibrant retro neon lighting and botanical background details. Delivered as 300DPI PNG.',
     messages: [
-      { id: 1, sender: 'Alex Johnson', time: '10:00 AM', text: 'Hi! I received your requirements. I will start working on the UI first.', isMe: false },
-      { id: 2, sender: 'You', time: '10:15 AM', text: 'Great! Let me know if you need any API keys for the analytics.', isMe: true },
-      { id: 3, sender: 'Alex Johnson', time: '11:30 AM', text: 'I have attached the initial wireframes for the dashboard.', isMe: false, attachment: 'dashboard_wireframes.pdf' },
+      { id: 1, sender: 'Maya Rivera', time: '10:00 AM', text: 'Hi! Thank you for the commission order. I received your reference photos and style notes. Starting the pencil rough sketch now!', isMe: false },
+      { id: 2, sender: 'You', time: '10:15 AM', text: 'Awesome Maya! Let us know once the composition sketch is ready so we can review the color palette.', isMe: true },
+      { id: 3, sender: 'Maya Rivera', time: '11:30 AM', text: 'Attached the initial rough composition layout for your review.', isMe: false, attachment: 'composition_sketch_v1.png' },
     ]
   };
 
   const statusMap: Record<string, { label: string, color: string, step: number }> = {
     'pending': { label: 'Requirements Pending', color: 'bg-amber-100 text-amber-800', step: 1 },
-    'active': { label: 'In Progress', color: 'bg-blue-100 text-blue-800', step: 2 },
+    'active': { label: 'In Progress', color: 'bg-violet-100 text-violet-800', step: 2 },
     'delivered': { label: 'In Review', color: 'bg-purple-100 text-purple-800', step: 3 },
     'completed': { label: 'Completed', color: 'bg-emerald-100 text-emerald-800', step: 4 },
   };
@@ -76,13 +76,13 @@ export default function OrderWorkspacePage({ params }: { params: { id: string } 
               <h2 className="font-bold text-slate-900 mb-4">Order Progress</h2>
               <div className="relative pl-6 border-l-2 border-slate-100 space-y-6">
                 {[
-                  { label: 'Requirements Submitted', desc: 'Buyer provided details', active: currentStatus.step >= 1 },
-                  { label: 'Order in Progress', desc: 'Seller is working on it', active: currentStatus.step >= 2 },
-                  { label: 'Delivery & Review', desc: 'Awaiting buyer approval', active: currentStatus.step >= 3 },
-                  { label: 'Order Completed', desc: 'Payment released', active: currentStatus.step === 4 },
+                  { label: 'Requirements Submitted', desc: 'Client provided creative references', active: currentStatus.step >= 1 },
+                  { label: 'Artwork in Progress', desc: 'Freelancer is working on your piece', active: currentStatus.step >= 2 },
+                  { label: 'Delivery & Review', desc: 'Review artwork proof and revisions', active: currentStatus.step >= 3 },
+                  { label: 'Order Completed', desc: 'High-res deliverables & escrow released', active: currentStatus.step === 4 },
                 ].map((step, idx) => (
                   <div key={idx} className="relative">
-                    <div className={`absolute -left-[35px] h-6 w-6 rounded-full flex items-center justify-center border-4 border-white ${step.active ? 'bg-indigo-600' : 'bg-slate-200'}`}>
+                    <div className={`absolute -left-[35px] h-6 w-6 rounded-full flex items-center justify-center border-4 border-white ${step.active ? 'bg-violet-600' : 'bg-slate-200'}`}>
                       {step.active && <CheckCircle2 className="h-4 w-4 text-white" />}
                     </div>
                     <div>
@@ -97,18 +97,18 @@ export default function OrderWorkspacePage({ params }: { params: { id: string } 
             {/* Delivery Info */}
             <Card className="border-slate-200 shadow-sm bg-slate-50">
               <CardContent className="p-4 flex items-start gap-3">
-                <Clock className="h-5 w-5 text-indigo-500 mt-0.5" />
+                <Clock className="h-5 w-5 text-violet-600 mt-0.5" />
                 <div>
                   <p className="font-semibold text-slate-900 text-sm">Expected Delivery</p>
-                  <p className="text-indigo-600 font-bold">{order.deliveryDate}</p>
+                  <p className="text-violet-600 font-bold">{order.deliveryDate}</p>
                 </div>
               </CardContent>
             </Card>
 
             {/* Requirements Box */}
             <div>
-              <h2 className="font-bold text-slate-900 mb-3 text-sm uppercase tracking-wider">Project Requirements</h2>
-              <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 text-sm text-slate-600">
+              <h2 className="font-bold text-slate-900 mb-3 text-sm uppercase tracking-wider">Project Brief & Details</h2>
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm text-slate-600 leading-relaxed">
                 {order.requirements}
               </div>
             </div>
@@ -135,7 +135,7 @@ export default function OrderWorkspacePage({ params }: { params: { id: string } 
           {/* Chat Messages */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             <div className="flex justify-center">
-              <span className="bg-slate-200 text-slate-600 text-xs px-3 py-1 rounded-full font-medium">Order Started</span>
+              <span className="bg-slate-200 text-slate-600 text-xs px-3 py-1 rounded-full font-medium">Commission Order Started</span>
             </div>
             
             {order.messages.map((msg) => (
@@ -149,10 +149,10 @@ export default function OrderWorkspacePage({ params }: { params: { id: string } 
                   )}
                   
                   <div className="flex flex-col gap-1">
-                    <div className={`p-4 rounded-2xl ${msg.isMe ? 'bg-indigo-600 text-white rounded-br-sm' : 'bg-white border border-slate-200 text-slate-800 rounded-bl-sm shadow-sm'}`}>
+                    <div className={`p-4 rounded-2xl ${msg.isMe ? 'bg-violet-600 text-white rounded-br-sm' : 'bg-white border border-slate-200 text-slate-800 rounded-bl-sm shadow-sm'}`}>
                       <p className="text-sm leading-relaxed">{msg.text}</p>
                       {msg.attachment && (
-                        <div className={`mt-3 p-2 rounded-lg flex items-center gap-2 text-sm border ${msg.isMe ? 'bg-indigo-700/50 border-indigo-500 text-white' : 'bg-slate-50 border-slate-200 text-slate-700'}`}>
+                        <div className={`mt-3 p-2 rounded-lg flex items-center gap-2 text-sm border ${msg.isMe ? 'bg-violet-700/50 border-violet-500 text-white' : 'bg-slate-50 border-slate-200 text-slate-700'}`}>
                           <FileText className="h-4 w-4 shrink-0" />
                           <span className="truncate">{msg.attachment}</span>
                         </div>
@@ -170,30 +170,29 @@ export default function OrderWorkspacePage({ params }: { params: { id: string } 
           {/* Message Input Area */}
           <div className="bg-white border-t border-slate-200 p-4 shrink-0">
             <div className="max-w-4xl mx-auto flex items-end gap-2">
-              <Button variant="ghost" size="icon" className="shrink-0 h-10 w-10 text-slate-500 hover:text-indigo-600 rounded-full hover:bg-indigo-50">
+              <Button variant="ghost" size="icon" className="shrink-0 h-10 w-10 text-slate-500 hover:text-violet-600 rounded-full hover:bg-violet-50">
                 <Paperclip className="h-5 w-5" />
               </Button>
               <div className="flex-1 relative">
                 <Textarea 
                   placeholder="Type your message here..." 
-                  className="min-h-[44px] h-[44px] max-h-32 resize-none rounded-xl bg-slate-50 border-slate-200 py-3 px-4 focus-visible:ring-1 focus-visible:ring-indigo-500 shadow-none"
+                  className="min-h-[44px] h-[44px] max-h-32 resize-none rounded-xl bg-slate-50 border-slate-200 py-3 px-4 focus-visible:ring-1 focus-visible:ring-violet-500 shadow-none"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
-                      // Send action would go here
                       setMessage('');
                     }
                   }}
                 />
               </div>
-              <Button size="icon" className="shrink-0 h-10 w-10 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-md">
+              <Button size="icon" className="shrink-0 h-10 w-10 bg-violet-600 hover:bg-violet-700 text-white rounded-full shadow-md">
                 <Send className="h-4 w-4 ml-0.5" />
               </Button>
             </div>
             <p className="text-center text-xs text-slate-400 mt-2 flex items-center justify-center gap-1">
-              <AlertCircle className="h-3 w-3" /> Keep communication inside the workspace for safety.
+              <AlertCircle className="h-3 w-3" /> Keep all communication and file deliveries inside the workspace.
             </p>
           </div>
         </div>

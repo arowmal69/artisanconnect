@@ -6,9 +6,7 @@ export interface Profile {
   avatar_url: string;
   portfolio_url?: string;
   role: 'buyer' | 'seller' | 'both';
-  skills: string[];
-  skills_offered?: string[];
-  skills_wanted?: string[];
+  skills: string[]; // freelancer's specialties / services offered
   created_at: string;
   updated_at: string;
 }
@@ -46,7 +44,6 @@ export interface Order {
 export interface Message {
   id: string;
   order_id?: string;
-  swap_id?: string;
   sender_id: string;
   receiver_id?: string;
   content: string;
@@ -64,19 +61,6 @@ export interface Review {
   feedback?: string;
   created_at: string;
   reviewer?: Profile;
-}
-
-export interface SkillSwapRequest {
-  id: string;
-  sender_id: string;
-  receiver_id: string;
-  offered_skill: string;
-  requested_skill: string;
-  message?: string;
-  status: 'pending' | 'accepted' | 'declined';
-  created_at: string;
-  sender_profile?: Profile;
-  receiver_profile?: Profile;
 }
 
 export interface PortfolioPost {

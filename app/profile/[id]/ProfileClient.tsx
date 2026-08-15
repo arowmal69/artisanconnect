@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import SwapRequestModal from '@/components/SwapRequestModal';
 import { Profile, PortfolioPost } from '@/lib/types';
-import { MessageSquare, MapPin, Calendar, Tag, Layers, CheckCircle2, Image as ImageIcon, Camera } from 'lucide-react';
+import { MapPin, Calendar, Tag, Camera, Briefcase, CheckCircle2 } from 'lucide-react';
+import Link from 'next/link';
 
 interface ProfileClientProps {
   artist: Profile;
@@ -13,7 +13,6 @@ interface ProfileClientProps {
 }
 
 export default function ProfileClient({ artist, initialPosts }: ProfileClientProps) {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<PortfolioPost | null>(null);
 
   const formattedDate = new Date(artist.created_at).toLocaleDateString('en-US', {
@@ -38,7 +37,10 @@ export default function ProfileClient({ artist, initialPosts }: ProfileClientPro
           <div className="flex-1 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl md:text-5xl font-black text-black tracking-tight">{artist.full_name || artist.username}</h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-3xl md:text-5xl font-black text-black tracking-tight">{artist.full_name || artist.username}</h1>
+                  <CheckCircle2 className="h-6 w-6 text-violet-500 shrink-0" />
+                </div>
                 <p className="text-lg text-gray-500 font-medium mt-1">@{artist.username}</p>
                 
                 <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-gray-400 font-semibold tracking-wide">
@@ -50,36 +52,31 @@ export default function ProfileClient({ artist, initialPosts }: ProfileClientPro
                   </span>
                 </div>
               </div>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="flex items-center justify-center gap-2 rounded-xl bg-black px-6 py-3 text-sm font-bold text-white hover:bg-gray-800 transition-colors shrink-0"
+
+              {/* Hire Me CTA */}
+              <Link
+                href={`/explore`}
+                className="flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-6 py-3 text-sm font-bold text-white hover:bg-violet-700 transition-colors shrink-0"
               >
-                <MessageSquare className="h-4 w-4" /> Request Swap
-              </button>
+                <Briefcase className="h-4 w-4" /> Hire Me
+              </Link>
             </div>
             
             <p className="text-base text-gray-600 max-w-2xl leading-relaxed mt-4">
               {artist.bio || "No bio provided."}
             </p>
 
-            <div className="flex flex-wrap gap-6 pt-4 border-t border-gray-200 mt-6">
-               <div>
-                  <span className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Teaches</span>
-                  <div className="flex flex-wrap gap-2">
-                    {(artist.skills_offered || []).length > 0 ? (artist.skills_offered || []).map((skill) => (
-                      <span key={skill} className="rounded-md bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-800">{skill}</span>
-                    )) : <span className="text-sm text-gray-400">None listed</span>}
-                  </div>
-               </div>
-               <div>
-                  <span className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Wants to Learn</span>
-                  <div className="flex flex-wrap gap-2">
-                    {(artist.skills_wanted || []).length > 0 ? (artist.skills_wanted || []).map((skill) => (
-                      <span key={skill} className="rounded-md border border-gray-200 px-3 py-1 text-xs font-semibold text-gray-600">{skill}</span>
-                    )) : <span className="text-sm text-gray-400">None listed</span>}
-                  </div>
-               </div>
-            </div>
+            {/* Specialties */}
+            {(artist.skills || []).length > 0 && (
+              <div className="pt-4 border-t border-gray-200 mt-6">
+                <span className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Specialties</span>
+                <div className="flex flex-wrap gap-2">
+                  {(artist.skills || []).map((skill) => (
+                    <span key={skill} className="rounded-md bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-700 border border-violet-100">{skill}</span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -151,12 +148,6 @@ export default function ProfileClient({ artist, initialPosts }: ProfileClientPro
           </div>
         </div>
       )}
-
-      <SwapRequestModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        targetArtist={artist}
-      />
 
       <Footer />
     </div>

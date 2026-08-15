@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Message } from '@/lib/types';
 
-export function useChatMessages(swapId: string, initialMessages: Message[] = []) {
+export function useChatMessages(threadId: string, initialMessages: Message[] = []) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -12,26 +12,26 @@ export function useChatMessages(swapId: string, initialMessages: Message[] = [])
   const supabase = createClient();
 
   useEffect(() => {
-    if (!swapId) {
+    if (!threadId) {
       setIsLoading(false);
       return;
     }
 
     let isMounted = true;
 
-    // 1. Fetch initial messages for this swap thread
+    // 1. Fetch initial messages for this thread
     async function fetchMessages() {
       try {
         setIsLoading(true);
         const { data, error: fetchErr } = await supabase
           .from('messages')
           .select('*')
-          .eq('swap_id', swapId)
+          .or(`order_id.eq.${threadId},sender_id.eq.${threadId},receiver_id.eq.${threadId}`)
           .order('created_at', { ascending: true });
 
         if (fetchErr) throw fetchErr;
 
-        if (isMounted && data) {
+        if (isMounted && data && data.length > 0) {
           setMessages(data as Message[]);
         }
       } catch (err: any) {
@@ -45,45 +45,37 @@ export function useChatMessages(swapId: string, initialMessages: Message[] = [])
 
     // 2. Subscribe to Realtime INSERT events on messages table
     const channel = supabase
-      .channel(`realtime:messages:${swapId}`)
+      .channel(`realtime:messages:${threadId}`)
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
           table: 'messages',
-          filter: `swap_id=eq.${swapId}`,
         },
         (payload) => {
           const newMessage = payload.new as Message;
           setMessages((prev) => {
-            // Prevent duplicates
             if (prev.some((m) => m.id === newMessage.id)) return prev;
             return [...prev, newMessage];
           });
         }
       )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.log(`Subscribed to realtime messages for swap ${swapId}`);
-        }
-      });
+      .subscribe();
 
     return () => {
       isMounted = false;
       supabase.removeChannel(channel);
     };
-  }, [swapId]);
+  }, [threadId]);
 
   // Helper to send a message
   const sendMessage = async (senderId: string, receiverId: string, content: string) => {
     if (!content.trim()) return;
 
-    // Optimistic UI insert
     const tempId = `temp-${Date.now()}`;
     const optimisticMessage: Message = {
       id: tempId,
-      swap_id: swapId,
       sender_id: senderId,
       receiver_id: receiverId,
       content: content.trim(),
@@ -96,7 +88,6 @@ export function useChatMessages(swapId: string, initialMessages: Message[] = [])
       const { data, error: sendErr } = await supabase
         .from('messages')
         .insert({
-          swap_id: swapId,
           sender_id: senderId,
           receiver_id: receiverId,
           content: content.trim(),
@@ -106,7 +97,6 @@ export function useChatMessages(swapId: string, initialMessages: Message[] = [])
 
       if (sendErr) throw sendErr;
 
-      // Replace optimistic message with persistent message
       if (data) {
         setMessages((prev) =>
           prev.map((msg) => (msg.id === tempId ? (data as Message) : msg))

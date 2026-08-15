@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start gap-8">
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4 group">
-              <div className="flex h-8 w-8 items-center justify-center bg-black text-white font-bold text-xs tracking-tighter">
+              <div className="flex h-8 w-8 items-center justify-center bg-violet-600 text-white font-bold text-xs tracking-tighter rounded-lg">
                 AC
               </div>
               <span className="text-lg font-bold text-black tracking-tight">
@@ -16,7 +16,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-sm text-gray-500 max-w-xs">
-              A peer-to-peer network connecting creative minds. Exchange skills, collaborate on projects, and build your portfolio.
+              Hire talented local artists, illustrators, singers, and dancers for your next project.
             </p>
           </div>
           
@@ -24,7 +24,7 @@ export default function Footer() {
             <div>
               <h4 className="text-sm font-semibold text-black mb-4">Platform</h4>
               <ul className="space-y-3 text-sm text-gray-500">
-                <li><Link href="/explore" className="hover:text-black transition-colors">Explore</Link></li>
+                <li><Link href="/explore" className="hover:text-black transition-colors">Find Freelancers</Link></li>
                 <li><Link href="/dashboard" className="hover:text-black transition-colors">Dashboard</Link></li>
                 <li><Link href="#" className="hover:text-black transition-colors">How it works</Link></li>
               </ul>
