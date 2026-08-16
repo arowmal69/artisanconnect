@@ -2,17 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, LogOut } from 'lucide-react';
+import { Menu, X, LogOut, Zap } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { logout } from '@/app/(auth)/actions';
 import { User as SupabaseUser } from '@supabase/supabase-js';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -21,139 +20,149 @@ export default function Navbar() {
       setUser(user);
       setIsLoading(false);
     };
-    
     fetchUser();
+
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md">
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-500 ${
+        scrolled
+          ? 'bg-black/70 backdrop-blur-2xl border-b border-white/8 shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
+          : 'bg-black/40 backdrop-blur-xl border-b border-white/5'
+      }`}
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        
+
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="flex h-8 w-8 items-center justify-center bg-violet-600 text-white rounded-lg font-bold text-xs tracking-tighter shadow-sm group-hover:bg-violet-700 transition-colors">
-            AC
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-violet-700 shadow-lg shadow-violet-900/50 group-hover:shadow-violet-700/60 transition-all duration-300 group-hover:scale-110">
+            <Zap className="h-4.5 w-4.5 text-white" fill="white" />
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-          <span className="text-lg font-bold text-slate-900 tracking-tight">
-            ArtisanConnect
+          <span className="text-lg font-bold text-white tracking-tight">
+            Artisan<span className="gradient-text">Connect</span>
           </span>
         </Link>
 
         {/* Center Nav Links */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-          <Link href="/" className="hover:text-violet-600 transition-colors">
-            Home
-          </Link>
-          <Link href="/explore" className="hover:text-violet-600 transition-colors">
-            Find Freelancers
-          </Link>
-          {user && (
-            <Link href="/dashboard" className="hover:text-violet-600 transition-colors">
-              My Orders
+        <nav className="hidden md:flex items-center gap-1">
+          {[
+            { href: '/', label: 'Home' },
+            { href: '/explore', label: 'Find Freelancers' },
+            ...(user ? [{ href: '/dashboard', label: 'My Orders' }] : []),
+          ].map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="relative px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-white/5 group"
+            >
+              {link.label}
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-violet-500 to-purple-400 rounded-full group-hover:w-3/4 transition-all duration-300" />
             </Link>
-          )}
+          ))}
         </nav>
 
-        {/* Right Action Button */}
-        <div className="hidden md:flex items-center gap-4">
+        {/* Right Action Buttons */}
+        <div className="hidden md:flex items-center gap-3">
           {isLoading ? (
-            <div className="h-8 w-24 bg-slate-100 animate-pulse rounded-md" />
+            <div className="h-8 w-24 bg-white/5 animate-pulse rounded-lg" />
           ) : user ? (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <Link href="/dashboard">
-                <Button variant="ghost" className="text-slate-600 hover:text-violet-600">
+                <button className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200">
                   Dashboard
-                </Button>
+                </button>
               </Link>
-              <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
-                <Avatar className="h-8 w-8 cursor-pointer ring-2 ring-transparent hover:ring-violet-100 transition-all">
-                  <AvatarImage src={user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${user.email}`} />
-                  <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
-                </Avatar>
+              <div className="flex items-center gap-2 pl-3 border-l border-white/10">
+                <img
+                  src={user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${user.email}`}
+                  alt="avatar"
+                  className="h-8 w-8 rounded-full object-cover ring-2 ring-violet-500/40 hover:ring-violet-500/80 transition-all cursor-pointer"
+                />
                 <form action={logout}>
-                  <Button type="submit" variant="ghost" size="icon" className="text-slate-400 hover:text-red-600" title="Log out">
+                  <button
+                    type="submit"
+                    title="Log out"
+                    className="flex items-center justify-center h-8 w-8 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-400/10 transition-all duration-200"
+                  >
                     <LogOut className="h-4 w-4" />
-                  </Button>
+                  </button>
                 </form>
               </div>
             </div>
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/login">
-                <Button variant="ghost" className="text-slate-600 hover:text-violet-600">
+                <button className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200">
                   Log In
-                </Button>
+                </button>
               </Link>
               <Link href="/signup">
-                <Button className="bg-violet-600 hover:bg-violet-700 text-white">
-                  Join Free
-                </Button>
+                <button className="relative px-5 py-2 text-sm font-semibold text-white rounded-xl btn-gradient overflow-hidden group">
+                  <span className="relative z-10">Join Free</span>
+                </button>
               </Link>
             </div>
           )}
         </div>
 
         {/* Mobile Hamburger */}
-        <div className="flex md:hidden items-center">
-          <Button
-            variant="ghost"
-            size="icon"
+        <div className="flex md:hidden">
+          <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-slate-600"
+            className="flex items-center justify-center h-9 w-9 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-all"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+          </button>
         </div>
       </div>
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 bg-white p-4 space-y-2 shadow-lg">
-          <Link
-            href="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-violet-600 rounded-md"
-          >
-            Home
-          </Link>
-          <Link
-            href="/explore"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-violet-600 rounded-md"
-          >
-            Find Freelancers
-          </Link>
-          
-          <div className="pt-4 mt-2 border-t border-slate-100">
+        <div className="md:hidden glass-dark border-t border-white/8 p-4 space-y-1 animate-fade-in">
+          {[
+            { href: '/', label: 'Home' },
+            { href: '/explore', label: 'Find Freelancers' },
+            ...(user ? [{ href: '/dashboard', label: 'My Orders' }, { href: '/messages', label: 'Messages' }] : []),
+          ].map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-4 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-all"
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          <div className="pt-3 mt-2 border-t border-white/8">
             {user ? (
-               <div className="space-y-2">
-                 <Link
-                    href="/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-violet-600 rounded-md"
-                  >
-                    My Orders
-                  </Link>
-                 <form action={logout} className="w-full">
-                   <Button
-                     type="submit"
-                     variant="ghost"
-                     className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
-                     onClick={() => setMobileMenuOpen(false)}
-                   >
-                     <LogOut className="h-4 w-4 mr-2" /> Log Out
-                   </Button>
-                 </form>
-               </div>
+              <form action={logout} className="w-full">
+                <button
+                  type="submit"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 w-full px-4 py-2.5 text-sm font-medium text-red-400 hover:bg-red-400/10 rounded-xl transition-all"
+                >
+                  <LogOut className="h-4 w-4" /> Log Out
+                </button>
+              </form>
             ) : (
-               <div className="space-y-2 p-2 flex flex-col">
-                 <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="w-full">
-                   <Button variant="outline" className="w-full">Log In</Button>
-                 </Link>
-                 <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="w-full">
-                   <Button className="w-full bg-violet-600 hover:bg-violet-700">Join Free</Button>
-                 </Link>
-               </div>
+              <div className="flex flex-col gap-2 p-1">
+                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                  <button className="w-full px-4 py-2.5 text-sm font-medium text-slate-300 border border-white/10 rounded-xl hover:bg-white/5 transition-all">
+                    Log In
+                  </button>
+                </Link>
+                <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
+                  <button className="w-full px-4 py-2.5 text-sm font-semibold text-white rounded-xl btn-gradient">
+                    Join Free
+                  </button>
+                </Link>
+              </div>
             )}
           </div>
         </div>

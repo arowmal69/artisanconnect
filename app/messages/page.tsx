@@ -6,14 +6,7 @@ import Footer from '@/components/Footer';
 import { useChatMessages } from '@/hooks/useChatMessages';
 import { MOCK_PROFILES } from '@/lib/mock-data';
 import { Profile } from '@/lib/types';
-import {
-  Send,
-  Sparkles,
-  Briefcase,
-  UserCheck,
-  Tag,
-  Clock,
-} from 'lucide-react';
+import { Send, Sparkles, Briefcase, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 interface ConversationThread {
@@ -25,13 +18,19 @@ interface ConversationThread {
   time: string;
 }
 
+const STATUS_CONFIG = {
+  active: { label: 'Active', color: 'rgba(16,185,129,0.15)', textColor: '#34d399', border: 'rgba(16,185,129,0.3)' },
+  inquiry: { label: 'Inquiry', color: 'rgba(124,58,237,0.15)', textColor: '#a78bfa', border: 'rgba(124,58,237,0.3)' },
+  completed: { label: 'Completed', color: 'rgba(99,102,241,0.15)', textColor: '#818cf8', border: 'rgba(99,102,241,0.3)' },
+};
+
 export default function MessagesDashboard() {
   const currentUser: Profile = MOCK_PROFILES[0];
 
   const [threads, setThreads] = useState<ConversationThread[]>([
     {
       id: 'thread-1',
-      partner: MOCK_PROFILES[1], // Marcus Chen
+      partner: MOCK_PROFILES[1],
       projectTopic: 'Oil Painting Landscape Commission',
       status: 'active',
       lastMessage: 'Hi Elena! I can walk you through the custom canvas sizing options.',
@@ -39,7 +38,7 @@ export default function MessagesDashboard() {
     },
     {
       id: 'thread-2',
-      partner: MOCK_PROFILES[2], // Aiden Cole
+      partner: MOCK_PROFILES[2],
       projectTopic: 'Vocal Track for Indie Game Intro',
       status: 'inquiry',
       lastMessage: 'Let me know the tempo and key for the vocal session recording!',
@@ -47,7 +46,7 @@ export default function MessagesDashboard() {
     },
     {
       id: 'thread-3',
-      partner: MOCK_PROFILES[3], // Sofia Diaz
+      partner: MOCK_PROFILES[3],
       projectTopic: 'Live Event Choreography Routine',
       status: 'inquiry',
       lastMessage: 'Sounds great! I have sent over the demo video preview.',
@@ -83,150 +82,180 @@ export default function MessagesDashboard() {
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
-
     sendMessage(currentUser.id, partnerProfile.id, inputMessage);
     setInputMessage('');
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800 font-sans flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: '#0a0a0f' }}>
       <Navbar />
 
-      <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col">
+      {/* Background orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="orb orb-violet" style={{ width: 400, height: 400, top: '5%', right: '-5%', opacity: 0.12 }} />
+        <div className="orb orb-indigo" style={{ width: 300, height: 300, bottom: '10%', left: '-5%', opacity: 0.1 }} />
+      </div>
+
+      <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col relative z-10">
         {/* Header */}
-        <div className="mb-6">
-          <div className="inline-flex items-center gap-2 rounded-full bg-violet-50 px-3.5 py-1 text-xs font-bold text-violet-700 border border-violet-100">
-            <Sparkles className="h-3.5 w-3.5" /> Project Messages & Inquiries
+        <div className="mb-6 animate-fade-in">
+          <div className="inline-flex items-center gap-2 glass-violet rounded-full px-3.5 py-1.5 mb-3">
+            <Sparkles className="h-3.5 w-3.5 text-violet-400" />
+            <span className="text-xs font-bold text-violet-300">Project Messages & Inquiries</span>
           </div>
-          <h1 className="mt-2 text-2xl sm:text-4xl font-extrabold text-slate-900">Inbox & Workspaces</h1>
+          <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            Inbox & Workspaces
+          </h1>
         </div>
 
-        {/* Dashboard Container */}
-        <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch min-h-[580px]">
-          
-          {/* Left Threads Sidebar */}
-          <div className="lg:col-span-4 flex flex-col rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 px-2 mb-3">
-              Conversations ({threads.length})
-            </h3>
+        {/* Main Panel */}
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch min-h-[600px] animate-fade-in animate-delay-100">
+
+          {/* ===== LEFT: THREAD LIST ===== */}
+          <div className="lg:col-span-4 glass rounded-3xl p-4 flex flex-col" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
+            <div className="flex items-center justify-between mb-4 px-1">
+              <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">
+                Conversations ({threads.length})
+              </h3>
+            </div>
 
             <div className="flex-1 space-y-2 overflow-y-auto pr-1">
               {threads.map((thread) => {
                 const isActive = thread.id === activeThreadId;
+                const status = STATUS_CONFIG[thread.status];
 
                 return (
-                  <div
+                  <button
                     key={thread.id}
                     onClick={() => setActiveThreadId(thread.id)}
-                    className={`cursor-pointer rounded-2xl p-3.5 transition-all border ${
-                      isActive
-                        ? 'border-violet-600 bg-violet-50/70 shadow-sm'
-                        : 'border-slate-100 bg-slate-50 hover:border-slate-200 hover:bg-slate-100/50'
+                    className={`w-full text-left rounded-2xl p-4 transition-all duration-200 ${
+                      isActive ? 'glow-violet-sm' : 'hover:bg-white/3'
                     }`}
+                    style={{
+                      background: isActive ? 'rgba(124,58,237,0.15)' : 'transparent',
+                      border: `1px solid ${isActive ? 'rgba(124,58,237,0.4)' : 'rgba(255,255,255,0.05)'}`,
+                    }}
                   >
                     <div className="flex items-center gap-3">
-                      <img
-                        src={thread.partner.avatar_url}
-                        alt={thread.partner.full_name}
-                        className="h-11 w-11 rounded-full object-cover ring-2 ring-white shadow-xs shrink-0"
-                      />
+                      <div className="relative shrink-0">
+                        <img
+                          src={thread.partner.avatar_url}
+                          alt={thread.partner.full_name}
+                          className="h-11 w-11 rounded-xl object-cover ring-1 ring-white/10"
+                        />
+                        {isActive && (
+                          <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-[#0a0a0f]" />
+                        )}
+                      </div>
+
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between mb-0.5">
-                          <h4 className="text-sm font-bold text-slate-900 truncate">{thread.partner.full_name}</h4>
-                          <span className="text-[10px] text-slate-400 font-medium shrink-0 ml-1">{thread.time}</span>
+                        <div className="flex items-center justify-between mb-1">
+                          <h4 className="text-sm font-black text-white truncate">{thread.partner.full_name}</h4>
+                          <span className="text-[10px] text-slate-500 font-medium shrink-0 ml-2">{thread.time}</span>
                         </div>
 
-                        <p className="text-xs font-semibold text-violet-700 truncate mb-1">
+                        <p className="text-xs font-semibold truncate mb-1" style={{ color: '#a78bfa' }}>
                           {thread.projectTopic}
                         </p>
 
-                        <p className="text-[11px] text-slate-500 truncate">
-                          {thread.lastMessage}
-                        </p>
+                        <div className="flex items-center justify-between">
+                          <p className="text-[11px] text-slate-500 truncate flex-1">{thread.lastMessage}</p>
+                          <span
+                            className="ml-2 shrink-0 text-[9px] font-bold px-2 py-0.5 rounded-full"
+                            style={{ background: status.color, color: status.textColor, border: `1px solid ${status.border}` }}
+                          >
+                            {status.label}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Right Chat Panel */}
-          <div className="lg:col-span-8 flex flex-col rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            {/* Top Chat Bar */}
-            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/80 p-4">
+          {/* ===== RIGHT: CHAT PANEL ===== */}
+          <div className="lg:col-span-8 glass rounded-3xl flex flex-col overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
+            {/* Chat Header */}
+            <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
               <div className="flex items-center gap-3">
                 <img
                   src={partnerProfile.avatar_url}
                   alt={partnerProfile.full_name}
-                  className="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-xs"
+                  className="h-10 w-10 rounded-xl object-cover ring-1 ring-violet-500/30"
                 />
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">{partnerProfile.full_name}</h3>
+                  <h3 className="text-sm font-black text-white">{partnerProfile.full_name}</h3>
                   <p className="text-xs text-slate-500">@{partnerProfile.username}</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="hidden sm:flex items-center gap-2 rounded-full bg-violet-50 px-3.5 py-1.5 text-xs border border-violet-100">
-                  <Briefcase className="h-3.5 w-3.5 text-violet-600" />
-                  <span className="font-semibold text-violet-900">{activeThread.projectTopic}</span>
+                <div className="hidden sm:flex items-center gap-2 glass-violet rounded-full px-3.5 py-1.5">
+                  <Briefcase className="h-3.5 w-3.5 text-violet-400" />
+                  <span className="text-xs font-semibold text-violet-300 max-w-[180px] truncate">
+                    {activeThread.projectTopic}
+                  </span>
                 </div>
-
-                <Link
-                  href={`/profile/${partnerProfile.id}`}
-                  className="text-xs font-bold text-violet-600 hover:text-violet-700 bg-white border border-violet-200 px-3 py-1.5 rounded-xl transition-colors"
-                >
-                  View Profile
+                <Link href={`/profile/${partnerProfile.id}`}>
+                  <button
+                    className="text-xs font-bold text-violet-400 hover:text-white px-3 py-1.5 rounded-xl transition-all flex items-center gap-1"
+                    style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.25)' }}
+                  >
+                    Profile <ArrowRight className="h-3 w-3" />
+                  </button>
                 </Link>
               </div>
             </div>
 
-            {/* Messages Log */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 min-h-[350px]">
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4 min-h-[380px]">
               {messages.map((msg) => {
                 const isMe = msg.sender_id === currentUser.id;
                 return (
-                  <div
-                    key={msg.id}
-                    className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
-                  >
+                  <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} animate-fade-in`}>
                     <div
-                      className={`max-w-[80%] rounded-2xl p-3.5 text-sm leading-relaxed ${
-                        isMe
-                          ? 'bg-violet-600 text-white rounded-br-none shadow-sm'
-                          : 'bg-slate-100 text-slate-800 rounded-bl-none border border-slate-200/80'
+                      className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                        isMe ? 'rounded-br-sm' : 'rounded-bl-sm'
                       }`}
+                      style={
+                        isMe
+                          ? { background: 'linear-gradient(135deg, #7c3aed, #6d28d9)', color: 'white', boxShadow: '0 4px 15px rgba(124,58,237,0.35)' }
+                          : { background: 'rgba(255,255,255,0.06)', color: '#e2e8f0', border: '1px solid rgba(255,255,255,0.08)' }
+                      }
                     >
                       {msg.content}
                     </div>
-                    <span className="mt-1 text-[10px] text-slate-400 font-medium">
-                      {new Date(msg.created_at).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
+                    <span className="mt-1 text-[10px] text-slate-600 font-medium">
+                      {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                 );
               })}
             </div>
 
-            {/* Input Form */}
+            {/* Input */}
             <form
               onSubmit={handleSendMessage}
-              className="border-t border-slate-100 bg-slate-50/50 p-4 flex items-center gap-3"
+              className="flex items-center gap-3 p-4"
+              style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}
             >
               <input
                 type="text"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
-                placeholder={`Message ${partnerProfile.full_name.split(' ')[0]} about your project...`}
-                className="flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:border-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-600/20"
+                placeholder={`Message ${partnerProfile.full_name?.split(' ')[0]} about your project...`}
+                className="input-dark flex-1 rounded-2xl px-4 py-3 text-sm text-white"
               />
               <button
                 type="submit"
                 disabled={!inputMessage.trim()}
-                className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-600 text-white shadow-md hover:bg-violet-700 transition-all disabled:opacity-40 shrink-0"
+                className="h-11 w-11 shrink-0 rounded-2xl text-white flex items-center justify-center transition-all disabled:opacity-30"
+                style={{
+                  background: inputMessage.trim() ? 'linear-gradient(135deg, #7c3aed, #6d28d9)' : 'rgba(124,58,237,0.2)',
+                  boxShadow: inputMessage.trim() ? '0 4px 15px rgba(124,58,237,0.4)' : 'none',
+                }}
               >
                 <Send className="h-4 w-4" />
               </button>
