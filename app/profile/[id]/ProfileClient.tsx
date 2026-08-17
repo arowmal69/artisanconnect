@@ -1,11 +1,15 @@
 'use client';
 
+import { toast } from "sonner";
+import { useRouter } from 'next/navigation';
+
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Profile, PortfolioPost } from '@/lib/types';
 import { MapPin, Calendar, Tag, Camera, Briefcase, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { sendHireMessage } from '@/app/actions/messages';
 
 interface ProfileClientProps {
   artist: Profile;
@@ -14,6 +18,8 @@ interface ProfileClientProps {
 
 export default function ProfileClient({ artist, initialPosts }: ProfileClientProps) {
   const [selectedImage, setSelectedImage] = useState<PortfolioPost | null>(null);
+  const [isHiring, setIsHiring] = useState(false);
+  const router = useRouter();
 
   const formattedDate = new Date(artist.created_at).toLocaleDateString('en-US', {
     month: 'short',
@@ -54,24 +60,43 @@ export default function ProfileClient({ artist, initialPosts }: ProfileClientPro
               </div>
 
               {/* Hire Me CTA */}
-              <Link
-                href={`/explore`}
-                className="flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-6 py-3 text-sm font-bold text-white hover:bg-violet-700 transition-colors shrink-0"
+              <button
+                onClick={async () => {
+                  setIsHiring(true);
+                  const result = await sendHireMessage(artist.id, artist.full_name || artist.username);
+                  setIsHiring(false);
+                  if (result?.error) {
+                    toast.error(result.error);
+                  } else {
+                    toast.success('Hiring request sent!', {
+                      description: `Your message was sent to ${artist.full_name || artist.username}.`
+                    });
+                    router.push('/messages');
+                  }
+                }}
+                disabled={isHiring}
+                className="flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-6 py-3 text-sm font-bold text-white hover:bg-violet-700 transition-colors shrink-0 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                <Briefcase className="h-4 w-4" /> Hire Me
-              </Link>
+                {isHiring ? (
+                  <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                ) : <Briefcase className="h-4 w-4" />}
+                {isHiring ? 'Sending...' : 'Hire Me'}
+              </button>
             </div>
             
             <p className="text-base text-gray-600 max-w-2xl leading-relaxed mt-4">
               {artist.bio || "No bio provided."}
             </p>
 
-            {/* Specialties */}
-            {(artist.skills || []).length > 0 && (
+            {/* Specialties — only shown for freelancers who have added skills */}
+            {(artist.skills_offered && artist.skills_offered.length > 0) && (
               <div className="pt-4 border-t border-gray-200 mt-6">
                 <span className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Specialties</span>
                 <div className="flex flex-wrap gap-2">
-                  {(artist.skills || []).map((skill) => (
+                  {artist.skills_offered.map((skill) => (
                     <span key={skill} className="rounded-md bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-700 border border-violet-100">{skill}</span>
                   ))}
                 </div>

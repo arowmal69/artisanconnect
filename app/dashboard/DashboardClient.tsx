@@ -10,9 +10,10 @@ interface DashboardClientProps {
   profile: Profile;
   activeOrders: Order[];
   recommendedServices: Service[];
+  unreadCount: number;
 }
 
-export default function DashboardClient({ profile, activeOrders, recommendedServices }: DashboardClientProps) {
+export default function DashboardClient({ profile, activeOrders, recommendedServices, unreadCount }: DashboardClientProps) {
 
   const getStatusBadge = (status: string) => {
     const map: Record<string, string> = {
@@ -106,29 +107,39 @@ export default function DashboardClient({ profile, activeOrders, recommendedServ
               </p>
 
               <div className="w-full" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '1.25rem' }}>
-                <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 text-left">Specialties</span>
-                <div className="flex flex-wrap gap-2">
-                  {(profile.skills || []).length > 0 ? (
-                    (profile.skills || []).slice(0, 4).map((skill: string) => (
-                      <span
-                        key={skill}
-                        className="text-[11px] font-semibold px-2.5 py-1 rounded-full text-violet-300"
-                        style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.2)' }}
-                      >
-                        {skill}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-sm text-slate-500">No specialties added yet</span>
-                  )}
-                </div>
+                {(profile.skills_offered || []).length > 0 ? (
+                  <>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 text-left">Specialties</span>
+                    <div className="flex flex-wrap gap-2">
+                      {(profile.skills_offered || []).slice(0, 4).map((skill: string) => (
+                        <span
+                          key={skill}
+                          className="text-[11px] font-semibold px-2.5 py-1 rounded-full text-violet-300"
+                          style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.2)' }}
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </>
+                ) : null}
               </div>
             </div>
 
             <Link href="/messages">
               <div className="card-hover glass rounded-2xl p-4 flex items-center justify-between cursor-pointer">
                 <span className="text-sm font-bold text-white">Messages & Inquiries</span>
-                <ChevronRight className="h-4 w-4 text-violet-400" />
+                <div className="flex items-center gap-2">
+                  {unreadCount > 0 && (
+                    <span
+                      className="text-[11px] font-black text-white rounded-full h-5 min-w-[20px] px-1.5 flex items-center justify-center"
+                      style={{ background: 'linear-gradient(135deg, #7c3aed, #6d28d9)', boxShadow: '0 0 8px rgba(124,58,237,0.6)' }}
+                    >
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
+                  <ChevronRight className="h-4 w-4 text-violet-400" />
+                </div>
               </div>
             </Link>
           </div>

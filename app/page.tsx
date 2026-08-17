@@ -15,46 +15,9 @@ const CATEGORIES = [
   { name: 'Dance & Performance', icon: PersonStanding, count: '594', color: 'from-amber-500/20 to-orange-600/10', iconColor: 'text-amber-400', glow: 'rgba(245,158,11,0.3)' },
 ];
 
-const TRENDING_SERVICES = [
-  {
-    id: '1',
-    title: 'I will create a stunning custom digital portrait illustration',
-    seller: { name: 'Maya Rivera', level: 'Top Rated', avatar: 'https://i.pravatar.cc/150?u=artist1' },
-    rating: 4.9, reviews: 218, price: 80,
-    image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=500&q=80',
-    delivery: 5, category: 'Illustration'
-  },
-  {
-    id: '2',
-    title: 'I will paint a custom watercolor portrait or landscape',
-    seller: { name: 'Lena Park', level: 'Level 2', avatar: 'https://i.pravatar.cc/150?u=artist2' },
-    rating: 5.0, reviews: 142, price: 120,
-    image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=500&q=80',
-    delivery: 7, category: 'Painting'
-  },
-  {
-    id: '3',
-    title: 'I will record a professional vocal cover or original song',
-    seller: { name: 'Aiden Cole', level: 'Top Rated', avatar: 'https://i.pravatar.cc/150?u=artist3' },
-    rating: 4.8, reviews: 307, price: 60,
-    image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80',
-    delivery: 3, category: 'Music'
-  },
-  {
-    id: '4',
-    title: 'I will choreograph and record a custom dance performance',
-    seller: { name: 'Sofia Diaz', level: 'Level 2', avatar: 'https://i.pravatar.cc/150?u=artist4' },
-    rating: 4.7, reviews: 91, price: 150,
-    image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&q=80',
-    delivery: 10, category: 'Dance'
-  },
-];
+const TRENDING_SERVICES: any[] = [];
 
-const TOP_FREELANCERS = [
-  { name: 'Maya Rivera', role: 'Digital Illustrator', skills: ['Portraits', 'Character Design', 'Procreate'], rating: 4.9, avatar: 'https://i.pravatar.cc/150?u=artist1', accent: 'from-violet-500 to-purple-600' },
-  { name: 'Aiden Cole', role: 'Vocalist & Producer', skills: ['Pop', 'R&B', 'Session Recording'], rating: 5.0, avatar: 'https://i.pravatar.cc/150?u=artist3', accent: 'from-pink-500 to-rose-600' },
-  { name: 'Sofia Diaz', role: 'Dancer & Choreographer', skills: ['Contemporary', 'Hip-Hop', 'Wedding Dances'], rating: 4.8, avatar: 'https://i.pravatar.cc/150?u=artist4', accent: 'from-amber-500 to-orange-600' },
-];
+const TOP_FREELANCERS: any[] = [];
 
 const TRUST_STATS = [
   { value: '12K+', label: 'Creative Freelancers', icon: Sparkles },

@@ -1,5 +1,7 @@
 'use client';
 
+import { toast } from "sonner";
+
 import React from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
@@ -181,7 +183,12 @@ export default function ServiceDetailsPage({ params }: { params: { id: string } 
                           </div>
                         </CardContent>
                         <CardFooter>
-                          <Link href={`/orders/new`} className="w-full">
+                          <Link href={`/orders/new`} className="w-full" onClick={(e) => {
+                            e.preventDefault();
+                            toast.success("Successfully hired!", {
+                              description: `You have hired this service for $${pkg.price}.`
+                            });
+                          }}>
                             <Button className="w-full h-12 text-base font-semibold bg-violet-600 hover:bg-violet-700 transition-colors">
                               Hire Now (${pkg.price})
                             </Button>

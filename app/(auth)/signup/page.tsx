@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { signup } from '../actions';
-import { AlertCircle, Palette, Briefcase, MailCheck, ArrowRight, Zap, Eye, EyeOff } from 'lucide-react';
+import { AlertCircle, Palette, Briefcase, MailCheck, ArrowRight, Zap, Eye, EyeOff, Camera, User } from 'lucide-react';
 
 export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
@@ -11,6 +11,17 @@ export default function SignupPage() {
   const [role, setRole] = useState<'buyer' | 'seller'>('seller');
   const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setAvatarPreview(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -88,6 +99,35 @@ export default function SignupPage() {
 
           {/* Card */}
           <div className="glass-strong rounded-3xl p-8" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+
+            {/* Avatar Upload */}
+            <div className="flex flex-col items-center mb-6">
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="relative h-24 w-24 rounded-full cursor-pointer group"
+              >
+                {avatarPreview ? (
+                  <img src={avatarPreview} alt="Avatar preview" className="h-24 w-24 rounded-full object-cover ring-2 ring-violet-500/50" />
+                ) : (
+                  <div className="h-24 w-24 rounded-full flex items-center justify-center" style={{ background: 'rgba(124,58,237,0.12)', border: '2px dashed rgba(124,58,237,0.4)' }}>
+                    <User className="h-10 w-10 text-violet-400/60" />
+                  </div>
+                )}
+                {/* Hover overlay */}
+                <div className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                  <Camera className="h-6 w-6 text-white" />
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 mt-2">Click to upload photo</p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                name="avatar"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarChange}
+              />
+            </div>
 
             {/* Role Selector */}
             <div className="mb-6">

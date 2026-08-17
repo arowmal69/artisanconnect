@@ -40,11 +40,18 @@ export default async function DashboardPage() {
     .neq('seller_id', user.id)
     .limit(3);
 
+  // Count messages received by the user (unread inbox messages)
+  const { count: unreadCount } = await supabase
+    .from('messages')
+    .select('*', { count: 'exact', head: true })
+    .eq('receiver_id', user.id);
+
   return (
     <DashboardClient 
-      profile={profile || { id: user.id, username: user.email?.split('@')[0] || 'User', full_name: '', avatar_url: '', role: 'buyer', skills: [] }} 
+      profile={profile || { id: user.id, username: user.email?.split('@')[0] || 'User', full_name: '', avatar_url: '', role: 'buyer', skills_offered: [] }} 
       activeOrders={orders || []} 
       recommendedServices={recommendedServices || []}
+      unreadCount={unreadCount || 0}
     />
   );
 }

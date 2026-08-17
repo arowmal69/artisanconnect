@@ -30,11 +30,12 @@ export async function login(formData: FormData) {
 export async function signup(formData: FormData) {
   const supabase = await createClient()
 
-  const skillsRaw = formData.get('skills') as string
-  const skills = skillsRaw ? skillsRaw.split(',').map(s => s.trim()).filter(Boolean) : []
+  const skillsOfferedRaw = formData.get('skills') as string
+  const skills_offered = skillsOfferedRaw ? skillsOfferedRaw.split(',').map(s => s.trim()).filter(Boolean) : []
   const role = (formData.get('role') as string) || 'seller'
   const email = formData.get('email') as string
   const password = formData.get('password') as string
+  const avatarFile = formData.get('avatar') as File | null
 
   const data = {
     email,
@@ -46,7 +47,7 @@ export async function signup(formData: FormData) {
         bio: formData.get('bio') as string,
         portfolio_url: formData.get('portfolio_url') as string,
         role: role,
-        skills: skills,
+        skills_offered: role === 'seller' ? skills_offered : [],
       }
     }
   }
@@ -55,6 +56,28 @@ export async function signup(formData: FormData) {
 
   if (error) {
     return { error: error.message }
+  }
+
+  // Upload avatar if provided
+  if (authData.user && avatarFile && avatarFile.size > 0) {
+    const fileExt = avatarFile.name.split('.').pop()
+    const filePath = `${authData.user.id}/avatar.${fileExt}`
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(filePath, avatarFile, { upsert: true })
+
+    if (!uploadError && uploadData) {
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath)
+
+      // Update the profile row with the avatar URL
+      await supabase
+        .from('profiles')
+        .update({ avatar_url: publicUrl })
+        .eq('id', authData.user.id)
+    }
   }
 
   // If email confirmation is enabled in Supabase, session will be null

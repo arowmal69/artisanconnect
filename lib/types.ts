@@ -6,7 +6,7 @@ export interface Profile {
   avatar_url: string;
   portfolio_url?: string;
   role: 'buyer' | 'seller' | 'both';
-  skills: string[]; // freelancer's specialties / services offered
+  skills_offered: string[]; // freelancer's skills / specialties
   created_at: string;
   updated_at: string;
 }

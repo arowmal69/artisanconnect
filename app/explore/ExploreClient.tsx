@@ -27,11 +27,11 @@ export default function ExploreClient({ initialProfiles }: ExploreClientProps) {
         profile.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         profile.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         profile.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (profile.skills || []).some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
+        (profile.skills_offered || []).some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
 
       const matchesCategory =
         categoryFilter === 'All' ||
-        (profile.skills || []).some((s) => s.toLowerCase().includes(categoryFilter.toLowerCase())) ||
+        (profile.skills_offered || []).some((s) => s.toLowerCase().includes(categoryFilter.toLowerCase())) ||
         profile.bio?.toLowerCase().includes(categoryFilter.toLowerCase());
 
       return matchesSearch && matchesCategory;
@@ -184,13 +184,13 @@ export default function ExploreClient({ initialProfiles }: ExploreClientProps) {
                   </div>
 
                   {/* Specialties */}
-                  {(artist.skills || []).length > 0 && (
+                  {(artist.skills_offered || []).length > 0 && (
                     <div className="mt-5">
                       <span className="text-[10px] font-bold tracking-widest text-slate-500 uppercase block mb-2">
                         Specialties
                       </span>
                       <div className="flex flex-wrap gap-2">
-                        {(artist.skills || []).map((skill) => (
+                        {(artist.skills_offered || []).map((skill) => (
                           <span
                             key={skill}
                             className="text-[11px] font-semibold px-2.5 py-1 rounded-full text-violet-300"
